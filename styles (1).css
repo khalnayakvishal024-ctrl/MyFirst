@@ -1,6 +1,17 @@
-body{
-  padding: 25px;
+/* Tiny floating hearts */
+.heart {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: url('images/heart.png') no-repeat center center;
+    background-size: cover;
+    pointer-events: none;
+    opacity: 1;
+    animation: floatUp 2s forwards;
 }
-.title {
-	color: #5C6AC4;
+
+@keyframes floatUp {
+    0% { transform: translateY(0) scale(1); opacity: 1; }
+    50% { transform: translateY(-100px) scale(1.2); opacity: 0.8; }
+    100% { transform: translateY(-200px) scale(0.8); opacity: 0; }
 }

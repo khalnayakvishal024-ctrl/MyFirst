@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Valentine?</title>
+
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
+  }
+
+  .container {
+    width: 420px;
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+
+  h1 {
+    color: #ff4d6d;
+    font-size: 22px;
+  }
+
+  button {
+    padding: 12px 30px;
+    font-size: 18px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+  }
+
+  #yesBtn {
+    background: #ff4d6d;
+    color: white;
+    margin-top: 25px;
+  }
+
+  #noBtn {
+    position: absolute;
+    background: #ddd;
+    color: black;
+    transition: left 0.5s ease-out, top 0.5s ease-out;
+    z-index: 3;
+  }
+
+  /* 💥 Blast animation */
+  .blast {
+    animation: shake 0.6s;
+  }
+
+  @keyframes shake {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    20% { transform: translate(-48%, -52%) rotate(-2deg); }
+    40% { transform: translate(-52%, -48%) rotate(2deg); }
+    60% { transform: translate(-49%, -51%) rotate(-2deg); }
+    80% { transform: translate(-51%, -49%) rotate(2deg); }
+    100% { transform: translate(-50%, -50%) rotate(0deg); }
+  }
+
+  /* 😭 Cry overlay */
+  .cry {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 5;
+    color: white;
+    text-align: center;
+  }
+
+  .cry span {
+    font-size: 90px;
+    animation: drop 1s ease;
+  }
+
+  @keyframes drop {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  /* 💗 Hearts fall */
+  @keyframes fall {
+    to {
+      transform: translateY(110vh);
+      opacity: 0;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container" id="card">
+  <h1>
+    Sunidhi, will you be my Valentine 💖<br>
+    for this year and years to come?
+  </h1>
+
+  <button id="yesBtn">Yes 💕</button>
+</div>
+
+<button id="noBtn">No 🙃</button>
+
+<div class="cry" id="cryScreen">
+  <span>😭</span>
+  <h2>That hurt…</h2>
+  <p>Okay… one more chance.</p>
+</div>
+
+<script>
+  const noBtn = document.getElementById("noBtn");
+  const yesBtn = document.getElementById("yesBtn");
+  const cry = document.getElementById("cryScreen");
+  const card = document.getElementById("card");
+
+  // Place NO randomly
+  function placeNo() {
+    noBtn.style.left = Math.random() * (window.innerWidth - 100) + "px";
+    noBtn.style.top = Math.random() * (window.innerHeight - 50) + "px";
+  }
+  placeNo();
+
+  // NO runs away
+  document.addEventListener("mousemove", (e) => {
+    const rect = noBtn.getBoundingClientRect();
+    const dist = Math.hypot(
+      e.clientX - (rect.left + rect.width / 2),
+      e.clientY - (rect.top + rect.height / 2)
+    );
+
+    if (dist < 120) placeNo();
+  });
+
+  // NO clicked → blast + cry + retry
+  noBtn.addEventListener("click", () => {
+    card.classList.add("blast");
+    cry.style.display = "flex";
+
+    setTimeout(() => {
+      cry.style.display = "none";
+      card.classList.remove("blast");
+      placeNo();
+    }, 2000);
+  });
+
+  // YES clicked → celebration 💖
+  yesBtn.addEventListener("click", () => {
+    document.body.style.background =
+      "linear-gradient(135deg, #ff758c, #ff7eb3)";
+
+    card.innerHTML = `
+      <h1>💖 She said YES 💖</h1>
+      <p style="font-size:18px; margin-top:15px;">
+        This year…<br>and all the years to come.
+      </p>
+      <p style="margin-top:20px;">🌸🌸🌸</p>
+    `;
+
+    noBtn.style.display = "none";
+
+    // Hearts confetti
+    for (let i = 0; i < 25; i++) {
+      const heart = document.createElement("div");
+      heart.innerText = "💗";
+      heart.style.position = "fixed";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.top = "-20px";
+      heart.style.fontSize = "24px";
+      heart.style.animation = "fall 3s linear";
+      document.body.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 3000);
+    }
+  });
+</script>
+
+</body>
+</html>
